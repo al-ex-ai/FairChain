@@ -1,0 +1,32 @@
+{
+  "short_name": "FairChain",
+  "name": "FairChain - Cyber Blockchain Gaming",
+  "description": "Experience futuristic gaming on the Stellar blockchain with cryptocurrency betting and neon aesthetics.",
+  "icons": [
+    {
+      "src": "fairchain-favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#00ffff",
+  "background_color": "#000014",
+  "categories": ["games", "entertainment", "finance", "blockchain"]
+}

@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+frontend/build/
+backend/dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+
+# Misc
+.pnp
+.pnp.js
+.netlify
