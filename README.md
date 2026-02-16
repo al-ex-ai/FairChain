@@ -2,8 +2,8 @@
 
 A blockchain-based gaming platform built on the Stellar testnet. Players can play games against AI opponents and place bets using XLM tokens with provably fair escrow-based transactions.
 
-**Live Demo:** [fairchain-gaming-app.netlify.app](https://fairchain-gaming-app.netlify.app/)
-*(Frontend-only deployment — games and UI are fully playable. Blockchain betting features require the backend running locally.)*
+**Live Demo:** [fairchain.al-ex.ai](https://fairchain.al-ex.ai/)
+*(Full-stack deployment — all games, wallet features, and blockchain betting are fully functional.)*
 
 ## Games
 
