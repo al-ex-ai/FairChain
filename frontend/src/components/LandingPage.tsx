@@ -11,43 +11,23 @@ import {
   Paper,
   Chip,
   useTheme,
+  useMediaQuery,
   alpha,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
   IconButton,
   Fade,
 } from '@mui/material';
 import {
-  Casino,
-  SportsEsports,
   EmojiEvents,
-  Security,
-  TrendingUp,
   PlayArrow,
   Bolt,
   Shield,
   Stars,
-  AccountBalanceWallet,
-  Speed,
-  CheckCircle,
   ArrowBackIos,
   ArrowForwardIos,
   CurrencyExchange,
   Public,
   Verified,
 } from '@mui/icons-material';
-
-interface Game {
-  id: string;
-  name: string;
-  description: string;
-  icon: React.ReactNode;
-  players: string;
-  status: 'available' | 'coming-soon';
-  image?: string;
-}
 
 interface LandingPageProps {
   onGameSelect: (gameId: string) => void;
@@ -70,7 +50,7 @@ const GameCard: React.FC<GameCardProps> = ({ title, description, icon, onPlay, f
       elevation={12}
       sx={{
         height: '100%',
-        minHeight: '400px',
+        minHeight: { xs: '300px', sm: '350px', md: '400px' },
         display: 'flex',
         flexDirection: 'column',
         background: `
@@ -209,6 +189,7 @@ interface SlideData {
 
 const Slideshow: React.FC = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides: SlideData[] = [
@@ -261,7 +242,7 @@ const Slideshow: React.FC = () => {
     <Box
       sx={{
         position: 'relative',
-        height: '500px',
+        height: { xs: '350px', sm: '400px', md: '500px' },
         overflow: 'hidden',
         borderRadius: 4,
         background: `
@@ -287,7 +268,8 @@ const Slideshow: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'center',
               textAlign: 'center',
-              p: 4,
+              p: { xs: 2, md: 4 },
+              pb: { xs: 5, md: 4 },
               visibility: index === currentSlide ? 'visible' : 'hidden',
             }}
           >
@@ -303,7 +285,8 @@ const Slideshow: React.FC = () => {
                   fontWeight: 800,
                   letterSpacing: '0.02em',
                   color: slide.color,
-                  mb: 3,
+                  mb: { xs: 1, md: 3 },
+                  fontSize: { xs: '1.2rem', sm: '1.8rem', md: '3rem' },
                   textShadow: `0 0 20px ${alpha(slide.color, 0.5)}`,
                 }}
               >
@@ -314,9 +297,11 @@ const Slideshow: React.FC = () => {
                 variant="h6"
                 color="text.secondary"
                 sx={{
-                  mb: 4,
+                  mb: { xs: 2, md: 4 },
                   lineHeight: 1.6,
                   fontWeight: 400,
+                  fontSize: { xs: '0.85rem', sm: '1rem', md: '1.25rem' },
+                  display: { xs: 'none', sm: 'block' },
                 }}
               >
                 {slide.description}
@@ -328,9 +313,11 @@ const Slideshow: React.FC = () => {
                     key={featureIndex}
                     label={feature}
                     variant="outlined"
+                    size={isMobile ? 'small' : 'medium'}
                     sx={{
                       fontFamily: '"Orbitron", monospace',
                       fontWeight: 600,
+                      fontSize: { xs: '0.65rem', sm: '0.8125rem' },
                       borderColor: slide.color,
                       color: slide.color,
                       '&:hover': {
@@ -348,9 +335,10 @@ const Slideshow: React.FC = () => {
       {/* Navigation Arrows */}
       <IconButton
         onClick={prevSlide}
+        size={isMobile ? 'small' : 'medium'}
         sx={{
           position: 'absolute',
-          left: 16,
+          left: { xs: 4, sm: 16 },
           top: '50%',
           transform: 'translateY(-50%)',
           background: alpha(slides[currentSlide].color, 0.2),
@@ -361,14 +349,15 @@ const Slideshow: React.FC = () => {
           },
         }}
       >
-        <ArrowBackIos />
+        <ArrowBackIos sx={{ fontSize: { xs: 16, sm: 24 } }} />
       </IconButton>
-      
+
       <IconButton
         onClick={nextSlide}
+        size={isMobile ? 'small' : 'medium'}
         sx={{
           position: 'absolute',
-          right: 16,
+          right: { xs: 4, sm: 16 },
           top: '50%',
           transform: 'translateY(-50%)',
           background: alpha(slides[currentSlide].color, 0.2),
@@ -379,18 +368,18 @@ const Slideshow: React.FC = () => {
           },
         }}
       >
-        <ArrowForwardIos />
+        <ArrowForwardIos sx={{ fontSize: { xs: 16, sm: 24 } }} />
       </IconButton>
       
       {/* Slide Indicators */}
       <Box
         sx={{
           position: 'absolute',
-          bottom: 16,
+          bottom: { xs: 8, sm: 16 },
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
-          gap: 1,
+          gap: { xs: 0.5, sm: 1 },
         }}
       >
         {slides.map((_, index) => (
@@ -398,8 +387,8 @@ const Slideshow: React.FC = () => {
             key={index}
             onClick={() => setCurrentSlide(index)}
             sx={{
-              width: 12,
-              height: 12,
+              width: { xs: 8, sm: 12 },
+              height: { xs: 8, sm: 12 },
               borderRadius: '50%',
               background: index === currentSlide 
                 ? slides[currentSlide].color 
@@ -429,57 +418,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGameSelect }) => {
       block: 'start'
     });
   };
-
-  const games: Game[] = [
-    {
-      id: 'tic-tac-toe',
-      name: 'Tic-Tac-Toe',
-      description: 'Classic strategy game with AI opponent. Test your skills in this timeless battle of wits.',
-      icon: <SportsEsports sx={{ fontSize: 50, color: theme.palette.primary.main, filter: 'drop-shadow(0 0 10px currentColor)' }} />,
-      players: '1v1 vs AI',
-      status: 'available',
-    },
-    {
-      id: 'poker',
-      name: 'Crypto Poker',
-      description: 'Provably fair poker with smart contract betting. Coming soon to FairChain.',
-      icon: <Casino sx={{ fontSize: 50, color: theme.palette.secondary.main, filter: 'drop-shadow(0 0 10px currentColor)' }} />,
-      players: '2-8 Players',
-      status: 'coming-soon',
-    },
-    {
-      id: 'blackjack',
-      name: 'Blockchain Blackjack',
-      description: 'Beat the dealer in this classic card game with cryptocurrency betting.',
-      icon: <TrendingUp sx={{ fontSize: 50, color: theme.palette.success.main, filter: 'drop-shadow(0 0 10px currentColor)' }} />,
-      players: '1v1 vs Dealer',
-      status: 'coming-soon',
-    },
-    {
-      id: 'rock-paper-scissors',
-      name: 'Rock Paper Scissors',
-      description: 'Classic hand game - Rock beats Scissors, Scissors beats Paper, Paper beats Rock',
-      icon: '🪨📄✂️',
-      players: '1v1 vs AI',
-      status: 'available',
-    },
-    {
-      id: 'coin-flip',
-      name: 'Coin Flip',
-      description: 'Simple heads or tails betting game with instant results',
-      icon: '🪙',
-      players: '1v1 vs AI',
-      status: 'available',
-    },
-    {
-      id: 'dice-roll',
-      name: 'Dice Roll',
-      description: 'Predict the dice roll outcome. Choose your number and roll for instant wins!',
-      icon: '🎲',
-      players: '1v1 vs AI',
-      status: 'available',
-    },
-  ];
 
   const features = [
     {
@@ -601,16 +539,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGameSelect }) => {
       </Box>
 
       {/* Blockchain Gaming Slideshow */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography 
-          variant="h2" 
-          component="h2" 
-          gutterBottom 
-          sx={{ 
+      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 8 } }}>
+        <Typography
+          variant="h2"
+          component="h2"
+          gutterBottom
+          sx={{
             textAlign: 'center',
-            mb: 6,
+            mb: { xs: 3, md: 6 },
             fontFamily: '"Orbitron", monospace',
             fontWeight: 800,
+            fontSize: { xs: '1.3rem', sm: '2rem', md: '3.75rem' },
             letterSpacing: '0.02em',
             background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
             backgroundClip: 'text',
@@ -625,16 +564,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGameSelect }) => {
       </Container>
 
       {/* Features Section */}
-      <Container maxWidth="lg" sx={{ py: 10 }}>
-        <Typography 
-          variant="h2" 
-          component="h2" 
-          gutterBottom 
-          sx={{ 
+      <Container maxWidth="lg" sx={{ py: { xs: 5, md: 10 } }}>
+        <Typography
+          variant="h2"
+          component="h2"
+          gutterBottom
+          sx={{
             textAlign: 'center',
-            mb: 8,
+            mb: { xs: 4, md: 8 },
             fontFamily: '"Orbitron", monospace',
             fontWeight: 800,
+            fontSize: { xs: '1.3rem', sm: '2rem', md: '3.75rem' },
             letterSpacing: '0.02em',
             background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
             backgroundClip: 'text',
@@ -646,13 +586,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGameSelect }) => {
           WHY CHOOSE FAIRCHAIN?
         </Typography>
         
-        <Grid container spacing={4}>
+        <Grid container spacing={{ xs: 2, md: 4 }}>
           {features.map((feature, index) => (
-            <Grid item xs={12} md={4} key={index}>
+            <Grid item xs={12} sm={4} key={index}>
               <Paper
                 elevation={8}
                 sx={{
-                  p: 4,
+                  p: { xs: 2, md: 4 },
                   height: '100%',
                   textAlign: 'center',
                   background: `
@@ -701,17 +641,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGameSelect }) => {
       </Container>
 
       {/* Games Section */}
-      <Box ref={gamesRef} sx={{ py: 10, bgcolor: alpha(theme.palette.background.paper, 0.02) }}>
+      <Box ref={gamesRef} sx={{ py: { xs: 5, md: 10 }, bgcolor: alpha(theme.palette.background.paper, 0.02) }}>
         <Container maxWidth="lg">
-          <Typography 
-            variant="h2" 
-            component="h2" 
-            gutterBottom 
-            sx={{ 
+          <Typography
+            variant="h2"
+            component="h2"
+            gutterBottom
+            sx={{
               textAlign: 'center',
-              mb: 8,
+              mb: { xs: 4, md: 8 },
               fontFamily: '"Orbitron", monospace',
               fontWeight: 800,
+              fontSize: { xs: '1.3rem', sm: '2rem', md: '3.75rem' },
               letterSpacing: '0.02em',
               background: `linear-gradient(45deg, ${theme.palette.secondary.main}, ${theme.palette.success.main})`,
               backgroundClip: 'text',
@@ -786,21 +727,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGameSelect }) => {
       {/* Call to Action */}
       <Box sx={{ py: 10, textAlign: 'center' }}>
         <Container maxWidth="md">
-          <EmojiEvents 
-            sx={{ 
-              fontSize: 80, 
+          <EmojiEvents
+            sx={{
+              fontSize: { xs: 50, md: 80 },
               color: theme.palette.warning.main,
               filter: `drop-shadow(0 0 30px ${theme.palette.warning.main})`,
-              mb: 4,
-            }} 
+              mb: { xs: 2, md: 4 },
+            }}
           />
-          <Typography 
-            variant="h3" 
-            component="h2" 
+          <Typography
+            variant="h3"
+            component="h2"
             gutterBottom
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 800,
+              fontSize: { xs: '1.3rem', sm: '2rem', md: '3rem' },
               letterSpacing: '0.02em',
               color: theme.palette.warning.main,
               mb: 3,

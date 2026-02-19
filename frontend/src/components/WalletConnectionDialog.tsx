@@ -13,10 +13,12 @@ import {
   CircularProgress,
   Alert,
   useTheme,
+  useMediaQuery,
   alpha,
   Grid,
   Divider,
   Chip,
+  IconButton,
 } from '@mui/material';
 import {
   AccountBalanceWallet,
@@ -26,6 +28,7 @@ import {
   Security,
   Star,
   Verified,
+  Close,
 } from '@mui/icons-material';
 import { useWallet } from '../contexts/WalletContext';
 
@@ -48,6 +51,7 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
   onClose,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { connectStellar, createTestWallet, isLoading, error, wallet } = useWallet();
   
   const [step, setStep] = useState<'wallets' | 'stellar-options' | 'enter-key' | 'create-test' | 'creating-wallet' | 'wallet-success'>('wallets');
@@ -179,23 +183,39 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
     setCountdown(5);
   };
 
+  const mobileCloseButton = isMobile ? (
+    <IconButton
+      onClick={handleClose}
+      sx={{
+        position: 'absolute',
+        right: 8,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        color: 'text.secondary',
+      }}
+    >
+      <Close />
+    </IconButton>
+  ) : null;
+
   const renderWalletSelection = () => (
     <>
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <AccountBalanceWallet 
-            sx={{ 
-              fontSize: 32, 
+      <DialogTitle sx={{ px: { xs: 2, sm: 3 }, py: { xs: 1.5, sm: 2 }, position: 'relative' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+          <AccountBalanceWallet
+            sx={{
+              fontSize: { xs: 24, sm: 32 },
               color: theme.palette.primary.main,
               filter: `drop-shadow(0 0 10px ${theme.palette.primary.main})`,
-            }} 
+            }}
           />
-          <Typography 
+          <Typography
             variant="h5"
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 800,
               letterSpacing: '0.02em',
+              fontSize: { xs: '1rem', sm: '1.5rem' },
               color: theme.palette.primary.main,
               textShadow: `0 0 10px ${theme.palette.primary.main}`,
             }}
@@ -204,9 +224,10 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
             CONNECT WALLET
           </Typography>
         </Box>
+        {mobileCloseButton}
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
         {error && (
           <Alert 
             severity="error" 
@@ -259,17 +280,18 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
                 }}
                 onClick={() => wallet.status === 'available' && handleWalletSelect(wallet.id)}
               >
-                <CardContent sx={{ p: 3, textAlign: 'center' }}>
-                  <Typography variant="h3" sx={{ mb: 2 }}>
+                <CardContent sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+                  <Typography sx={{ fontSize: { xs: '1.5rem', sm: '3rem' }, mb: 1 }}>
                     {wallet.icon}
                   </Typography>
-                  
+
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 1 }}>
-                    <Typography 
+                    <Typography
                       variant="h6"
                       sx={{
                         fontFamily: '"Orbitron", monospace',
                         fontWeight: 700,
+                        fontSize: { xs: '0.75rem', sm: '1.25rem' },
                         color: wallet.color,
                       }}
                     >
@@ -280,10 +302,10 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
                     )}
                   </Box>
                   
-                  <Typography 
-                    variant="body2" 
+                  <Typography
+                    variant="body2"
                     color="text.secondary"
-                    sx={{ mb: 2, minHeight: 40 }}
+                    sx={{ mb: 1, minHeight: { xs: 'auto', sm: 40 }, fontSize: { xs: '0.7rem', sm: '0.875rem' } }}
                   >
                     {wallet.description}
                   </Typography>
@@ -307,12 +329,13 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
         </Grid>
       </DialogContent>
 
-      <DialogActions sx={{ p: 3 }}>
-        <Button 
+      <DialogActions sx={{ p: { xs: 2, sm: 3 } }}>
+        <Button
           onClick={handleClose}
           sx={{
             fontFamily: '"Orbitron", monospace',
             fontWeight: 600,
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
             letterSpacing: '0.02em',
           }}
         >
@@ -324,32 +347,34 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
 
   const renderStellarOptions = () => (
     <>
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Star 
-            sx={{ 
-              fontSize: 32, 
+      <DialogTitle sx={{ px: { xs: 2, sm: 3 }, py: { xs: 1.5, sm: 2 }, position: 'relative' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+          <Star
+            sx={{
+              fontSize: { xs: 24, sm: 32 },
               color: '#00d4ff',
               filter: `drop-shadow(0 0 10px #00d4ff)`,
-            }} 
+            }}
           />
-          <Typography 
+          <Typography
             variant="h5"
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 800,
               letterSpacing: '0.02em',
+              fontSize: { xs: '1rem', sm: '1.5rem' },
               color: '#00d4ff',
               textShadow: `0 0 10px #00d4ff`,
             }}
             className="neon-text"
           >
-            STELLAR CONNECTION
+            STELLAR
           </Typography>
         </Box>
+        {mobileCloseButton}
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
         <Alert 
           severity="info" 
           sx={{ 
@@ -362,8 +387,8 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
           <strong>Stellar Testnet:</strong> Connect to Stellar testnet for development and testing
         </Alert>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
+        <Grid container spacing={2}>
+          <Grid item xs={6} sm={6}>
             <Card
               sx={{
                 cursor: 'pointer',
@@ -377,32 +402,32 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
                 '&:hover': {
                   border: `2px solid ${theme.palette.primary.main}`,
                   boxShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.4)}`,
-                  transform: 'translateY(-2px)',
                 },
               }}
               onClick={() => setStep('enter-key')}
             >
-              <CardContent sx={{ p: 3, textAlign: 'center' }}>
-                <Input sx={{ fontSize: 40, mb: 2, color: theme.palette.primary.main }} />
-                <Typography 
+              <CardContent sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+                <Input sx={{ fontSize: { xs: 28, sm: 40 }, mb: 1, color: theme.palette.primary.main }} />
+                <Typography
                   variant="h6"
                   sx={{
                     fontFamily: '"Orbitron", monospace',
                     fontWeight: 700,
+                    fontSize: { xs: '0.7rem', sm: '1.25rem' },
                     color: theme.palette.primary.main,
-                    mb: 1,
+                    mb: 0.5,
                   }}
                 >
-                  ENTER PUBLIC KEY
+                  PUBLIC KEY
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Connect with your existing Stellar account
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', sm: '0.875rem' } }}>
+                  Existing Stellar account
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={6} sm={6}>
             <Card
               sx={{
                 cursor: 'pointer',
@@ -416,26 +441,26 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
                 '&:hover': {
                   border: `2px solid ${theme.palette.success.main}`,
                   boxShadow: `0 0 20px ${alpha(theme.palette.success.main, 0.4)}`,
-                  transform: 'translateY(-2px)',
                 },
               }}
               onClick={() => setStep('create-test')}
             >
-              <CardContent sx={{ p: 3, textAlign: 'center' }}>
-                <Add sx={{ fontSize: 40, mb: 2, color: theme.palette.success.main }} />
-                <Typography 
+              <CardContent sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+                <Add sx={{ fontSize: { xs: 28, sm: 40 }, mb: 1, color: theme.palette.success.main }} />
+                <Typography
                   variant="h6"
                   sx={{
                     fontFamily: '"Orbitron", monospace',
                     fontWeight: 700,
+                    fontSize: { xs: '0.7rem', sm: '1.25rem' },
                     color: theme.palette.success.main,
-                    mb: 1,
+                    mb: 0.5,
                   }}
                 >
-                  CREATE TEST WALLET
+                  TEST WALLET
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Generate new account with 10,000 XLM
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', sm: '0.875rem' } }}>
+                  New account + 10,000 XLM
                 </Typography>
               </CardContent>
             </Card>
@@ -443,12 +468,13 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
         </Grid>
       </DialogContent>
 
-      <DialogActions sx={{ p: 3 }}>
-        <Button 
+      <DialogActions sx={{ p: { xs: 2, sm: 3 } }}>
+        <Button
           onClick={handleBack}
           sx={{
             fontFamily: '"Orbitron", monospace',
             fontWeight: 600,
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
             letterSpacing: '0.02em',
           }}
         >
@@ -460,21 +486,16 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
 
   const renderEnterKey = () => (
     <>
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Input 
-            sx={{ 
-              fontSize: 32, 
-              color: theme.palette.primary.main,
-              filter: `drop-shadow(0 0 10px ${theme.palette.primary.main})`,
-            }} 
-          />
-          <Typography 
+      <DialogTitle sx={{ px: { xs: 2, sm: 3 }, py: { xs: 1.5, sm: 2 }, position: 'relative' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+          <Input sx={{ fontSize: { xs: 24, sm: 32 }, color: theme.palette.primary.main }} />
+          <Typography
             variant="h5"
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 800,
               letterSpacing: '0.02em',
+              fontSize: { xs: '0.9rem', sm: '1.5rem' },
               color: theme.palette.primary.main,
               textShadow: `0 0 10px ${theme.palette.primary.main}`,
             }}
@@ -483,9 +504,10 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
             ENTER PUBLIC KEY
           </Typography>
         </Box>
+        {mobileCloseButton}
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
         <Alert 
           severity="warning" 
           sx={{ 
@@ -527,32 +549,35 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: 3 }}>
-        <Button 
+      <DialogActions sx={{ p: { xs: 2, sm: 3 } }}>
+        <Button
           onClick={handleBack}
           sx={{
             fontFamily: '"Orbitron", monospace',
             fontWeight: 600,
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
             letterSpacing: '0.02em',
           }}
         >
           BACK
         </Button>
-        
+
         <Button
           onClick={handleConnectPublicKey}
           disabled={!publicKey || !!keyError || isLoading}
           variant="contained"
+          size={isMobile ? 'small' : 'medium'}
           sx={{
             fontFamily: '"Orbitron", monospace',
             fontWeight: 700,
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
             letterSpacing: '0.02em',
             background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
           }}
         >
           {isLoading ? (
             <>
-              <CircularProgress size={20} sx={{ mr: 1 }} />
+              <CircularProgress size={18} sx={{ mr: 1 }} />
               CONNECTING...
             </>
           ) : (
@@ -565,21 +590,16 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
 
   const renderCreateTest = () => (
     <>
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Add 
-            sx={{ 
-              fontSize: 32, 
-              color: theme.palette.success.main,
-              filter: `drop-shadow(0 0 10px ${theme.palette.success.main})`,
-            }} 
-          />
-          <Typography 
+      <DialogTitle sx={{ px: { xs: 2, sm: 3 }, py: { xs: 1.5, sm: 2 }, position: 'relative' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+          <Add sx={{ fontSize: { xs: 24, sm: 32 }, color: theme.palette.success.main }} />
+          <Typography
             variant="h5"
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 800,
               letterSpacing: '0.02em',
+              fontSize: { xs: '0.9rem', sm: '1.5rem' },
               color: theme.palette.success.main,
               textShadow: `0 0 10px ${theme.palette.success.main}`,
             }}
@@ -588,9 +608,10 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
             CREATE TEST WALLET
           </Typography>
         </Box>
+        {mobileCloseButton}
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
         <Alert 
           severity="success" 
           sx={{ 
@@ -642,34 +663,36 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: 3 }}>
-        <Button 
+      <DialogActions sx={{ p: { xs: 2, sm: 3 } }}>
+        <Button
           onClick={handleBack}
           sx={{
             fontFamily: '"Orbitron", monospace',
             fontWeight: 600,
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
             letterSpacing: '0.02em',
           }}
         >
           BACK
         </Button>
-        
+
         <Button
           onClick={handleCreateTestWallet}
           disabled={isLoading}
           variant="contained"
-          size="large"
+          size={isMobile ? 'medium' : 'large'}
           sx={{
-            px: 4,
+            px: { xs: 2, sm: 4 },
             fontFamily: '"Orbitron", monospace',
             fontWeight: 700,
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
             letterSpacing: '0.02em',
             background: `linear-gradient(45deg, ${theme.palette.success.main}, ${theme.palette.primary.main})`,
           }}
         >
           {isLoading ? (
             <>
-              <CircularProgress size={20} sx={{ mr: 1 }} />
+              <CircularProgress size={18} sx={{ mr: 1 }} />
               CREATING...
             </>
           ) : (
@@ -682,14 +705,15 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
 
   const renderCreatingWallet = () => (
     <>
-      <DialogTitle>
+      <DialogTitle sx={{ px: { xs: 2, sm: 3 } }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-          <Typography 
+          <Typography
             variant="h5"
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 800,
               letterSpacing: '0.02em',
+              fontSize: { xs: '1rem', sm: '1.5rem' },
               color: theme.palette.primary.main,
               textShadow: `0 0 10px ${theme.palette.primary.main}`,
             }}
@@ -760,21 +784,16 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
   const renderWalletSuccess = () => {
     return (
       <>
-        <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Verified 
-              sx={{ 
-                fontSize: 32, 
-                color: theme.palette.success.main,
-                filter: `drop-shadow(0 0 10px ${theme.palette.success.main})`,
-              }} 
-            />
-            <Typography 
+        <DialogTitle sx={{ px: { xs: 2, sm: 3 }, py: { xs: 1.5, sm: 2 }, position: 'relative' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+            <Verified sx={{ fontSize: { xs: 24, sm: 32 }, color: theme.palette.success.main }} />
+            <Typography
               variant="h5"
               sx={{
                 fontFamily: '"Orbitron", monospace',
                 fontWeight: 800,
                 letterSpacing: '0.02em',
+                fontSize: { xs: '1rem', sm: '1.5rem' },
                 color: theme.palette.success.main,
                 textShadow: `0 0 10px ${theme.palette.success.main}`,
               }}
@@ -783,6 +802,7 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
               WALLET CREATED!
             </Typography>
           </Box>
+          {mobileCloseButton}
         </DialogTitle>
 
         <DialogContent>
@@ -865,13 +885,15 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
           </Box>
         </DialogContent>
 
-        <DialogActions sx={{ p: 3, justifyContent: 'center' }}>
+        <DialogActions sx={{ p: { xs: 2, sm: 3 }, justifyContent: 'center' }}>
           <Button
             onClick={handleClose}
             variant="contained"
+            size={isMobile ? 'medium' : 'large'}
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 700,
+              fontSize: { xs: '0.75rem', sm: '0.875rem' },
               letterSpacing: '0.02em',
               background: `linear-gradient(45deg, ${theme.palette.success.main}, ${theme.palette.primary.main})`,
             }}
@@ -884,12 +906,13 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={step === 'creating-wallet' ? undefined : handleClose}
       disableEscapeKeyDown={step === 'creating-wallet'}
-      maxWidth="md" 
+      maxWidth="md"
       fullWidth
+      fullScreen={isMobile}
       PaperProps={{
         sx: {
           background: `
@@ -897,8 +920,8 @@ const WalletConnectionDialog: React.FC<WalletConnectionDialogProps> = ({
             linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%)
           `,
           backdropFilter: 'blur(20px)',
-          border: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
-          borderRadius: 4,
+          border: isMobile ? 'none' : `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+          borderRadius: isMobile ? 0 : 4,
           boxShadow: `0 0 50px ${alpha(theme.palette.primary.main, 0.2)}`,
         }
       }}

@@ -15,6 +15,9 @@ import {
   StepContent,
   LinearProgress,
   Chip,
+  IconButton,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   AccountBalanceWallet,
@@ -22,6 +25,7 @@ import {
   CheckCircle,
   Error as ErrorIcon,
   Timer,
+  Close,
 } from '@mui/icons-material';
 import { useWallet } from '../contexts/WalletContext';
 import * as StellarSdk from '@stellar/stellar-sdk';
@@ -49,6 +53,8 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
   betAmount,
   gameType,
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { wallet, getWalletPrivateKey, refreshBalance } = useWallet();
   const [currentStep, setCurrentStep] = useState(0);
   const [escrowAccount, setEscrowAccount] = useState('');
@@ -243,13 +249,14 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
       onClose={onClose}
       maxWidth="md"
       fullWidth
+      fullScreen={isMobile}
       PaperProps={{
         sx: {
           background:
             'linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 255, 255, 0.3)',
-          borderRadius: 3,
+          border: isMobile ? 'none' : '1px solid rgba(0, 255, 255, 0.3)',
+          borderRadius: isMobile ? 0 : 3,
         },
       }}
     >
@@ -257,22 +264,38 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
         sx={{
           fontFamily: '"Orbitron", monospace',
           fontWeight: 700,
-          fontSize: '1.5rem',
+          fontSize: { xs: '0.85rem', sm: '1.5rem' },
           color: 'primary.main',
           textAlign: 'center',
           borderBottom: '1px solid rgba(0, 255, 255, 0.2)',
+          px: { xs: 2, sm: 3 },
+          position: 'relative',
         }}
       >
-        <Security sx={{ mr: 2, verticalAlign: 'middle' }} />
-        PREPARING {gameType.toUpperCase()} BETTING
+        <Security sx={{ mr: 1, verticalAlign: 'middle', fontSize: { xs: 20, sm: 24 } }} />
+        PREPARING {gameType.toUpperCase()} BET
+        {isMobile && (
+          <IconButton
+            onClick={onClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'text.secondary',
+            }}
+          >
+            <Close />
+          </IconButton>
+        )}
       </DialogTitle>
 
-      <DialogContent sx={{ p: 3 }} ref={dialogContentRef}>
+      <DialogContent sx={{ p: { xs: 2, sm: 3 } }} ref={dialogContentRef}>
         {/* Betting Summary */}
         <Paper
           sx={{
-            p: 2,
-            mb: 3,
+            p: { xs: 1.5, sm: 2 },
+            mb: 2,
             background:
               'linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 128, 0.05) 100%)',
             border: '1px solid rgba(0, 255, 255, 0.2)',
@@ -284,21 +307,24 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 600,
+              fontSize: { xs: '0.8rem', sm: '1.25rem' },
               color: 'primary.main',
               mb: 1,
             }}
           >
             Betting Details
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             <Chip
-              icon={<AccountBalanceWallet />}
-              label={`Bet Amount: ${betAmount} XLM`}
-              sx={{ fontFamily: '"Orbitron", monospace', fontWeight: 600 }}
+              icon={<AccountBalanceWallet sx={{ fontSize: { xs: 16, sm: 20 } }} />}
+              label={`${betAmount} XLM`}
+              size={isMobile ? 'small' : 'medium'}
+              sx={{ fontFamily: '"Orbitron", monospace', fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.8125rem' } }}
             />
             <Chip
-              label={`Game: ${gameType}`}
-              sx={{ fontFamily: '"Orbitron", monospace', fontWeight: 600 }}
+              label={gameType}
+              size={isMobile ? 'small' : 'medium'}
+              sx={{ fontFamily: '"Orbitron", monospace', fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.8125rem' } }}
             />
           </Box>
         </Paper>
@@ -313,6 +339,7 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
                   '& .MuiStepLabel-label': {
                     fontFamily: '"Orbitron", monospace',
                     fontWeight: 600,
+                    fontSize: { xs: '0.7rem', sm: '0.875rem' },
                     color:
                       step.status === 'completed'
                         ? 'success.main'
@@ -352,28 +379,31 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
 
                 {index === 1 && step.status === 'processing' && (
                   <Box sx={{ mt: 2 }}>
-                    <Alert severity="warning" sx={{ mb: 2 }}>
-                      <strong>Confirm:</strong> Transfer {betAmount} XLM to the
-                      escrow account?
+                    <Alert severity="warning" sx={{ mb: 2, '& .MuiAlert-message': { fontSize: { xs: '0.75rem', sm: '0.875rem' } } }}>
+                      <strong>Confirm:</strong> Transfer {betAmount} XLM to escrow?
                     </Alert>
-                    <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                       <Button
                         variant="contained"
+                        size={isMobile ? 'small' : 'medium'}
                         onClick={handleUserConfirm}
                         sx={{
                           fontFamily: '"Orbitron", monospace',
                           fontWeight: 600,
+                          fontSize: { xs: '0.65rem', sm: '0.875rem' },
                           background: 'linear-gradient(45deg, #4caf50, #2e7d32)',
                         }}
                       >
-                        CONFIRM & PROCEED
+                        CONFIRM
                       </Button>
                       <Button
                         variant="outlined"
+                        size={isMobile ? 'small' : 'medium'}
                         onClick={handleUserReject}
                         sx={{
                           fontFamily: '"Orbitron", monospace',
                           fontWeight: 600,
+                          fontSize: { xs: '0.65rem', sm: '0.875rem' },
                           color: 'error.main',
                           borderColor: 'error.main',
                         }}
@@ -390,7 +420,7 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
 
         {/* All Steps Completed */}
         {showSuccessNotification && (
-          <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Alert
               severity="success"
               sx={{
@@ -401,19 +431,21 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
                 borderRadius: 3,
               }}
             >
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, fontSize: { xs: '0.9rem', sm: '1.25rem' }, mb: 1 }}>
                 Ready to Play!
               </Typography>
-              <Typography sx={{ mb: 2 }}>
+              <Typography sx={{ mb: 2, fontSize: { xs: '0.75rem', sm: '1rem' } }}>
                 Your bet has been secured in escrow on the Stellar blockchain.
               </Typography>
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+              <Box sx={{ display: 'flex', gap: 1, flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'center' }}>
                 <Button
                   variant="contained"
+                  size={isMobile ? 'small' : 'medium'}
                   onClick={handleGameReady}
                   sx={{
                     fontFamily: '"Orbitron", monospace',
                     fontWeight: 700,
+                    fontSize: { xs: '0.7rem', sm: '0.875rem' },
                     background: 'linear-gradient(45deg, #4caf50, #2e7d32)',
                   }}
                 >
@@ -421,10 +453,12 @@ const BettingPreparationDialog: React.FC<BettingPreparationDialogProps> = ({
                 </Button>
                 <Button
                   variant="outlined"
+                  size={isMobile ? 'small' : 'medium'}
                   onClick={handleViewOnBlockchain}
                   sx={{
                     fontFamily: '"Orbitron", monospace',
                     fontWeight: 600,
+                    fontSize: { xs: '0.65rem', sm: '0.875rem' },
                     borderColor: 'primary.main',
                     color: 'primary.main',
                   }}

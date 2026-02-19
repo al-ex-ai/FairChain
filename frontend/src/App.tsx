@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CssBaseline, Container, Box, IconButton, AppBar, Toolbar, Typography, Button, Menu, MenuItem, Avatar, Chip, Alert } from '@mui/material';
+import { CssBaseline, Container, Box, IconButton, AppBar, Toolbar, Typography, Button, Menu, MenuItem, Avatar, Chip } from '@mui/material';
 import { Home, ArrowBack, Login, PersonAdd, AccountCircle, Logout, AccountBalanceWallet, Refresh } from '@mui/icons-material';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { GameProvider } from './contexts/GameContext';
@@ -157,14 +157,33 @@ const AppContent: React.FC<AppContentProps> = ({ user, setUser }) => {
   const renderAuthButtons = () => {
     if (user) {
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1.5 } }}>
           {/* Wallet Connection */}
+          {!isConnected ? (
+            <IconButton
+              onClick={() => setIsWalletDialogOpen(true)}
+              sx={{
+                display: { xs: 'flex', sm: 'none' },
+                color: '#00ffff',
+                background: 'rgba(0, 255, 255, 0.1)',
+                border: '1px solid rgba(0, 255, 255, 0.3)',
+                '&:hover': {
+                  background: 'rgba(0, 255, 255, 0.2)',
+                  boxShadow: '0 0 15px rgba(0, 255, 255, 0.4)',
+                },
+              }}
+              size="small"
+            >
+              <AccountBalanceWallet sx={{ fontSize: 20 }} />
+            </IconButton>
+          ) : null}
           {!isConnected ? (
             <Button
               variant="outlined"
               startIcon={<AccountBalanceWallet />}
               onClick={() => setIsWalletDialogOpen(true)}
               sx={{
+                display: { xs: 'none', sm: 'flex' },
                 fontFamily: '"Orbitron", monospace',
                 fontWeight: 600,
                 letterSpacing: '0.02em',
@@ -182,33 +201,35 @@ const AppContent: React.FC<AppContentProps> = ({ user, setUser }) => {
               CONNECT WALLET
             </Button>
           ) : (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
               <Chip
-                icon={<AccountBalanceWallet sx={{ '&.MuiChip-icon': { color: '#000014 !important' } }} />}
+                icon={<AccountBalanceWallet sx={{ '&.MuiChip-icon': { color: '#000014 !important' }, fontSize: { xs: 16, sm: 20 } }} />}
                 label={`${wallet?.balance} XLM`}
                 clickable
                 onClick={() => setIsWalletManagementOpen(true)}
                 sx={{
                   fontFamily: '"Orbitron", monospace',
                   fontWeight: 700,
-                  fontSize: '0.9rem',
-                  height: 40,
+                  fontSize: { xs: '0.6rem', sm: '0.9rem' },
+                  height: { xs: 28, sm: 40 },
                   background: 'linear-gradient(45deg, #00ffff 0%, #4dffff 100%)',
                   color: '#000014',
                   border: '1px solid rgba(0, 255, 255, 0.3)',
                   boxShadow: '0 0 15px rgba(0, 255, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #4dffff 0%, #00ffff 100%)',
-                    boxShadow: '0 0 20px rgba(0, 255, 255, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-                    transform: 'translateY(-1px)',
-                  },
+                  '& .MuiChip-icon': { ml: { xs: 0.5, sm: 1 } },
                   '& .MuiChip-label': {
                     fontFamily: '"Orbitron", monospace',
                     fontWeight: 700,
                     color: '#000014',
                     textShadow: 'none',
+                    px: { xs: 0.5, sm: 1 },
+                  },
+                  '&:hover': {
+                    background: 'linear-gradient(45deg, #4dffff 0%, #00ffff 100%)',
+                    boxShadow: '0 0 20px rgba(0, 255, 255, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+                    transform: 'translateY(-1px)',
                   },
                 }}
               />
@@ -216,6 +237,7 @@ const AppContent: React.FC<AppContentProps> = ({ user, setUser }) => {
                 onClick={handleWalletRefresh}
                 disabled={walletLoading}
                 sx={{
+                  display: { xs: 'none', sm: 'flex' },
                   color: '#00ffff',
                   background: 'rgba(0, 255, 255, 0.1)',
                   border: '1px solid rgba(0, 255, 255, 0.3)',
@@ -237,56 +259,61 @@ const AppContent: React.FC<AppContentProps> = ({ user, setUser }) => {
 
           <Chip
             avatar={
-              <Avatar 
-                sx={{ 
+              <Avatar
+                sx={{
                   bgcolor: 'transparent',
                   background: 'linear-gradient(45deg, #ff0080 0%, #ff4da6 100%)',
                   color: '#ffffff',
                   fontFamily: '"Orbitron", monospace',
                   fontWeight: 800,
-                  fontSize: '1rem',
+                  fontSize: { xs: '0.7rem', sm: '1rem' },
+                  width: { xs: 22, sm: 32 },
+                  height: { xs: 22, sm: 32 },
                   boxShadow: '0 0 10px rgba(255, 0, 128, 0.4)',
                 }}
               >
                 {user.username[0].toUpperCase()}
               </Avatar>
             }
-            label={`Level ${user.level}`}
+            label={`Lv.${user.level}`}
             variant="outlined"
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 700,
-              fontSize: '0.9rem',
-              height: 40,
+              fontSize: { xs: '0.6rem', sm: '0.9rem' },
+              height: { xs: 28, sm: 40 },
               color: '#ff0080',
               borderColor: '#ff0080',
               background: 'rgba(255, 0, 128, 0.1)',
               boxShadow: '0 0 10px rgba(255, 0, 128, 0.2)',
               transition: 'all 0.3s ease',
+              '& .MuiChip-label': {
+                fontFamily: '"Orbitron", monospace',
+                fontWeight: 700,
+                color: '#ff0080',
+                textShadow: '0 0 5px rgba(255, 0, 128, 0.5)',
+                px: { xs: 0.5, sm: 1 },
+              },
               '&:hover': {
                 borderColor: '#ff4da6',
                 background: 'rgba(255, 0, 128, 0.2)',
                 boxShadow: '0 0 15px rgba(255, 0, 128, 0.4)',
                 transform: 'translateY(-1px)',
               },
-              '& .MuiChip-label': {
-                fontFamily: '"Orbitron", monospace',
-                fontWeight: 700,
-                color: '#ff0080',
-                textShadow: '0 0 5px rgba(255, 0, 128, 0.5)',
-              },
             }}
           />
           <IconButton
             onClick={handleMenuClick}
-            sx={{ 
+            size="small"
+            sx={{
               color: 'primary.main',
+              p: { xs: 0.5, sm: 1 },
               '&:hover': {
                 bgcolor: 'rgba(139, 69, 19, 0.1)',
               },
             }}
           >
-            <AccountCircle sx={{ fontSize: 32 }} />
+            <AccountCircle sx={{ fontSize: { xs: 24, sm: 32 } }} />
           </IconButton>
           <Menu
             anchorEl={anchorEl}
@@ -341,12 +368,45 @@ const AppContent: React.FC<AppContentProps> = ({ user, setUser }) => {
     }
 
     return (
-      <Box sx={{ display: 'flex', gap: 1 }}>
+      <Box sx={{ display: 'flex', gap: { xs: 0.5, sm: 1 } }}>
+        <IconButton
+          onClick={() => setCurrentView('signin')}
+          size="small"
+          sx={{
+            display: { xs: 'flex', sm: 'none' },
+            color: '#00ffff',
+            background: 'rgba(0, 255, 255, 0.1)',
+            border: '1px solid rgba(0, 255, 255, 0.4)',
+            '&:hover': {
+              background: 'rgba(0, 255, 255, 0.2)',
+              boxShadow: '0 0 15px rgba(0, 255, 255, 0.4)',
+            },
+          }}
+        >
+          <Login sx={{ fontSize: 20 }} />
+        </IconButton>
+        <IconButton
+          onClick={() => setCurrentView('signup')}
+          size="small"
+          sx={{
+            display: { xs: 'flex', sm: 'none' },
+            color: '#ffffff',
+            background: 'linear-gradient(45deg, #ff0080, #ff4da6)',
+            border: '1px solid rgba(255, 0, 128, 0.5)',
+            '&:hover': {
+              background: 'linear-gradient(45deg, #ff4da6, #ff0080)',
+              boxShadow: '0 0 15px rgba(255, 0, 128, 0.4)',
+            },
+          }}
+        >
+          <PersonAdd sx={{ fontSize: 20 }} />
+        </IconButton>
         <Button
           variant="outlined"
           startIcon={<Login />}
           onClick={() => setCurrentView('signin')}
           sx={{
+            display: { xs: 'none', sm: 'flex' },
             fontFamily: '"Orbitron", monospace',
             fontWeight: 600,
             letterSpacing: '0.02em',
@@ -370,6 +430,7 @@ const AppContent: React.FC<AppContentProps> = ({ user, setUser }) => {
           startIcon={<PersonAdd />}
           onClick={() => setCurrentView('signup')}
           sx={{
+            display: { xs: 'none', sm: 'flex' },
             fontFamily: '"Orbitron", monospace',
             fontWeight: 600,
             letterSpacing: '0.02em',
@@ -395,47 +456,49 @@ const AppContent: React.FC<AppContentProps> = ({ user, setUser }) => {
     <Box sx={{ flexGrow: 1, minHeight: '100vh' }} className="gaming-gradient-bg">
       <CssBaseline />
       <AppBar position="static" elevation={currentView === 'landing' ? 0 : 1}>
-        <Toolbar>
+        <Toolbar sx={{ px: { xs: 1, sm: 2 }, minHeight: { xs: 48, sm: 64 } }}>
           {(currentView === 'game' || currentView === 'signin' || currentView === 'signup') && (
-            <IconButton 
-              edge="start" 
-              color="inherit" 
+            <IconButton
+              edge="start"
+              color="inherit"
               onClick={handleBackToLanding}
-              sx={{ mr: 2 }}
+              sx={{ mr: { xs: 0.5, sm: 2 } }}
+              size="small"
             >
               <ArrowBack />
             </IconButton>
           )}
-          <Typography 
-            variant="h6" 
-            component="div" 
-            sx={{ 
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
               flexGrow: 1,
               fontFamily: '"Orbitron", monospace',
               fontWeight: 700,
               letterSpacing: '0.02em',
+              fontSize: { xs: '0.75rem', sm: '1.25rem' },
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              minWidth: 0,
             }}
             className="neon-text"
           >
-            {currentView === 'landing' ? 'FairChain' : 
-             currentView === 'game' ? `FairChain - ${getGameDisplayName(selectedGame)}` :
-             currentView === 'signin' ? 'FairChain - Sign In' :
-             'FairChain - Sign Up'}
+            {currentView === 'landing' ? 'FairChain' :
+             currentView === 'game' ? getGameDisplayName(selectedGame) :
+             currentView === 'signin' ? 'Sign In' :
+             'Sign Up'}
           </Typography>
           
           {currentView === 'game' && (
-            <Button 
-              color="inherit" 
-              startIcon={<Home />}
+            <IconButton
+              color="inherit"
               onClick={handleBackToLanding}
-              sx={{ 
-                mr: 2,
-                fontFamily: '"Orbitron", monospace',
-                fontWeight: 600,
-              }}
+              size="small"
+              sx={{ mr: { xs: 0, sm: 1 } }}
             >
-              Home
-            </Button>
+              <Home sx={{ fontSize: { xs: 20, sm: 24 } }} />
+            </IconButton>
           )}
           
           {(currentView === 'landing' || currentView === 'game') && renderAuthButtons()}

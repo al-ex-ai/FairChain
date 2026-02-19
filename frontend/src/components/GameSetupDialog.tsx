@@ -21,6 +21,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   useTheme,
+  useMediaQuery,
   alpha,
   Card,
   CardContent,
@@ -37,6 +38,7 @@ import {
   Security,
   AccountBalanceWallet,
   TrendingUp,
+  Close,
 } from '@mui/icons-material';
 import BettingPreparationDialog from './BettingPreparationDialog';
 import { useWallet } from '../contexts/WalletContext';
@@ -73,6 +75,7 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [showBettingPreparation, setShowBettingPreparation] = useState(false);
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { wallet, isConnected } = useWallet();
   const scrollRef = useRef<HTMLDivElement>(null);
   const bettingScrollRef = useRef<HTMLDivElement>(null);
@@ -354,11 +357,12 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
   }, [isBettingEnabled]);
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth="md" 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
       fullWidth
+      fullScreen={isMobile}
       PaperProps={{
         sx: {
           background: `
@@ -366,28 +370,29 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
             linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%)
           `,
           backdropFilter: 'blur(20px)',
-          border: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
-          borderRadius: 4,
+          border: isMobile ? 'none' : `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+          borderRadius: isMobile ? 0 : 4,
           boxShadow: `0 0 50px ${alpha(theme.palette.primary.main, 0.2)}`,
         }
       }}
       className="cyber-border"
     >
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <SportsEsports 
-            sx={{ 
-              fontSize: 32, 
+      <DialogTitle sx={{ px: { xs: 2, sm: 3 }, py: { xs: 1.5, sm: 2 }, position: 'relative' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+          <SportsEsports
+            sx={{
+              fontSize: { xs: 24, sm: 32 },
               color: theme.palette.primary.main,
               filter: `drop-shadow(0 0 10px ${theme.palette.primary.main})`,
-            }} 
+            }}
           />
-          <Typography 
+          <Typography
             variant="h5"
             sx={{
               fontFamily: '"Orbitron", monospace',
               fontWeight: 800,
               letterSpacing: '0.02em',
+              fontSize: { xs: '1rem', sm: '1.5rem' },
               color: theme.palette.primary.main,
               textShadow: `0 0 10px ${theme.palette.primary.main}`,
             }}
@@ -396,14 +401,28 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
             GAME SETUP
           </Typography>
         </Box>
+        {isMobile && (
+          <IconButton
+            onClick={onClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'text.secondary',
+            }}
+          >
+            <Close />
+          </IconButton>
+        )}
       </DialogTitle>
       
-      <DialogContent>
+      <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
         {error && (
-          <Alert 
-            severity="error" 
-            sx={{ 
-              mb: 3,
+          <Alert
+            severity="error"
+            sx={{
+              mb: 2,
               background: `linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%)`,
               border: `1px solid ${alpha(theme.palette.error.main, 0.3)}`,
               borderRadius: 2,
@@ -414,29 +433,30 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
         )}
 
         {/* Demo Mode Notice */}
-        <Alert 
-          severity="info" 
-          sx={{ 
-            mb: 3,
+        <Alert
+          severity="info"
+          sx={{
+            mb: 2,
             background: `linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%)`,
             border: `1px solid ${alpha(theme.palette.info.main, 0.3)}`,
             borderRadius: 2,
             '& .MuiAlert-message': {
               fontFamily: '"Orbitron", monospace',
               fontWeight: 500,
+              fontSize: { xs: '0.7rem', sm: '0.875rem' },
             },
           }}
         >
-          <strong>Demo Mode:</strong> This is a demonstration version. No real cryptocurrency transactions are made.
+          <strong>Demo Mode:</strong> No real crypto transactions are made.
         </Alert>
         
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ mt: 1 }}>
           {/* Game Mode Selection */}
           <Paper
             elevation={6}
             sx={{
-              p: 3,
-              mb: 3,
+              p: { xs: 2, sm: 3 },
+              mb: 2,
               background: `
                 radial-gradient(circle at center, ${alpha(theme.palette.secondary.main, 0.1)} 0%, transparent 70%),
                 linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%)
@@ -446,20 +466,21 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
               borderRadius: 3,
             }}
           >
-            <Typography 
-              variant="h6" 
+            <Typography
+              variant="h6"
               gutterBottom
               sx={{
                 fontFamily: '"Orbitron", monospace',
                 fontWeight: 700,
                 letterSpacing: '0.02em',
+                fontSize: { xs: '0.8rem', sm: '1.25rem' },
                 color: theme.palette.secondary.main,
-                mb: 2,
+                mb: { xs: 1, sm: 2 },
               }}
             >
               CHOOSE YOUR OPPONENT
             </Typography>
-            
+
             <ToggleButtonGroup
               value={gameMode}
               exclusive
@@ -469,7 +490,7 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
                 '& .MuiToggleButton-root': {
                   border: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
                   borderRadius: 2,
-                  p: 2,
+                  p: { xs: 1, sm: 2 },
                   fontFamily: '"Orbitron", monospace',
                   fontWeight: 600,
                   letterSpacing: '0.02em',
@@ -488,24 +509,24 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
               }}
             >
               <ToggleButton value="ai">
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-                  <SmartToy sx={{ fontSize: 32 }} />
-                  <Typography variant="body1" fontWeight={600}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                  <SmartToy sx={{ fontSize: { xs: 24, sm: 32 } }} />
+                  <Typography variant="body2" fontWeight={600} sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
                     AI OPPONENT
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', sm: 'block' } }}>
                     Challenge the machine
                   </Typography>
                 </Box>
               </ToggleButton>
-              
+
               <ToggleButton value="multiplayer" disabled>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-                  <Person sx={{ fontSize: 32 }} />
-                  <Typography variant="body1" fontWeight={600}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                  <Person sx={{ fontSize: { xs: 24, sm: 32 } }} />
+                  <Typography variant="body2" fontWeight={600} sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
                     REAL PLAYER
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', sm: 'block' } }}>
                     Coming Soon
                   </Typography>
                 </Box>
@@ -518,8 +539,8 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
             <Paper
               elevation={6}
               sx={{
-                p: 3,
-                mb: 3,
+                p: { xs: 2, sm: 3 },
+                mb: 2,
                 background: `
                   radial-gradient(circle at center, ${alpha(getDifficultyColor(difficulty), 0.1)} 0%, transparent 70%),
                   linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%)
@@ -529,20 +550,21 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
                 borderRadius: 3,
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Psychology 
-                  sx={{ 
-                    fontSize: 28, 
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: { xs: 1, sm: 2 } }}>
+                <Psychology
+                  sx={{
+                    fontSize: { xs: 22, sm: 28 },
                     color: getDifficultyColor(difficulty),
                     filter: `drop-shadow(0 0 10px ${getDifficultyColor(difficulty)})`,
-                  }} 
+                  }}
                 />
-                <Typography 
+                <Typography
                   variant="h6"
                   sx={{
                     fontFamily: '"Orbitron", monospace',
                     fontWeight: 700,
                     letterSpacing: '0.02em',
+                    fontSize: { xs: '0.8rem', sm: '1.25rem' },
                     color: getDifficultyColor(difficulty),
                   }}
                 >
@@ -590,7 +612,7 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
           <Paper
             elevation={6}
             sx={{
-              p: 3,
+              p: { xs: 2, sm: 3 },
               background: `
                 radial-gradient(circle at center, ${alpha(theme.palette.warning.main, 0.1)} 0%, transparent 70%),
                 linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%)
@@ -600,24 +622,25 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
               borderRadius: 3,
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Casino 
-                sx={{ 
-                  fontSize: 28, 
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: { xs: 1, sm: 2 } }}>
+              <Casino
+                sx={{
+                  fontSize: { xs: 22, sm: 28 },
                   color: theme.palette.warning.main,
                   filter: `drop-shadow(0 0 10px ${theme.palette.warning.main})`,
-                }} 
+                }}
               />
-              <Typography 
+              <Typography
                 variant="h6"
                 sx={{
                   fontFamily: '"Orbitron", monospace',
                   fontWeight: 700,
                   letterSpacing: '0.02em',
+                  fontSize: { xs: '0.8rem', sm: '1.25rem' },
                   color: theme.palette.warning.main,
                 }}
               >
-                DEMO BETTING OPTIONS
+                DEMO BETTING
               </Typography>
             </Box>
 
@@ -656,26 +679,27 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
           {isBettingEnabled && (
             <Box ref={bettingScrollRef}>
               {/* Blockchain Selection */}
-              <Typography 
-                variant="h6" 
+              <Typography
+                variant="h6"
                 sx={{
                   fontFamily: '"Orbitron", monospace',
                   fontWeight: 700,
                   letterSpacing: '0.02em',
+                  fontSize: { xs: '0.75rem', sm: '1.25rem' },
                   color: theme.palette.info.main,
-                  mb: 2,
+                  mb: { xs: 1, sm: 2 },
                   display: 'flex',
                   alignItems: 'center',
                   gap: 1,
                 }}
               >
-                <AccountBalanceWallet sx={{ fontSize: 24 }} />
-                SELECT BLOCKCHAIN (DEMO)
+                <AccountBalanceWallet sx={{ fontSize: { xs: 18, sm: 24 } }} />
+                SELECT BLOCKCHAIN
               </Typography>
               
-              <Grid container spacing={2} sx={{ mb: 3 }}>
-                {blockchains.slice(0, 8).map((blockchain) => (
-                  <Grid item xs={6} sm={4} md={3} key={blockchain.id}>
+              <Grid container spacing={{ xs: 1, sm: 2 }} sx={{ mb: 2 }}>
+                {blockchains.slice(0, isMobile ? 4 : 8).map((blockchain) => (
+                  <Grid item xs={3} sm={4} md={3} key={blockchain.id}>
                     <Card
                       sx={{
                         cursor: 'pointer',
@@ -685,46 +709,46 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
                         ` : `
                           linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%)
                         `,
-                        border: selectedBlockchain === blockchain.id ? 
-                          `2px solid ${blockchain.color}` : 
+                        border: selectedBlockchain === blockchain.id ?
+                          `2px solid ${blockchain.color}` :
                           `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
                         borderRadius: 2,
                         transition: 'all 0.3s ease',
                         '&:hover': {
                           border: `2px solid ${blockchain.color}`,
                           boxShadow: `0 0 15px ${alpha(blockchain.color, 0.4)}`,
-                          transform: 'scale(1.02)',
                         },
                       }}
                       onClick={() => setSelectedBlockchain(blockchain.id)}
                     >
-                      <CardContent sx={{ p: 2, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ mb: 1 }}>
+                      <CardContent sx={{ p: { xs: 1, sm: 2 }, '&:last-child': { pb: { xs: 1, sm: 2 } }, textAlign: 'center' }}>
+                        <Typography sx={{ fontSize: { xs: '1.2rem', sm: '2rem' }, mb: 0.5 }}>
                           {blockchain.icon}
                         </Typography>
-                        <Typography 
-                          variant="body2" 
+                        <Typography
+                          variant="body2"
                           sx={{
                             fontFamily: '"Orbitron", monospace',
                             fontWeight: 600,
+                            fontSize: { xs: '0.5rem', sm: '0.75rem' },
                             color: blockchain.color,
                             mb: 0.5,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
                           }}
                         >
-                          {blockchain.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
                           {blockchain.symbol}
                         </Typography>
-                        {blockchain.status === 'coming-soon' && (
-                          <Chip 
-                            label="Demo Only" 
-                            size="small" 
-                            sx={{ 
-                              mt: 1, 
-                              fontSize: '0.6rem',
+                        {blockchain.status === 'coming-soon' && !isMobile && (
+                          <Chip
+                            label="Demo"
+                            size="small"
+                            sx={{
+                              fontSize: '0.55rem',
+                              height: 18,
                               fontFamily: '"Orbitron", monospace',
-                            }} 
+                            }}
                           />
                         )}
                       </CardContent>
@@ -737,28 +761,29 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
               <Paper
                 elevation={2}
                 sx={{
-                  p: 2,
-                  mb: 3,
+                  p: { xs: 1.5, sm: 2 },
+                  mb: 2,
                   background: `linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(22, 33, 62, 0.7) 100%)`,
                   border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
                   borderRadius: 2,
                 }}
               >
-                <Typography 
-                  variant="body2" 
+                <Typography
+                  variant="body2"
                   color="text.secondary"
                   sx={{
                     fontFamily: '"Orbitron", monospace',
                     fontWeight: 500,
+                    fontSize: { xs: '0.6rem', sm: '0.75rem' },
                     textAlign: 'center',
                     mb: 1,
                   }}
                 >
-                  MORE BLOCKCHAINS (DEMO ONLY)
+                  MORE BLOCKCHAINS (DEMO)
                 </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
-                  {blockchains.slice(8).map((blockchain) => (
-                    <Chip 
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, justifyContent: 'center' }}>
+                  {blockchains.slice(isMobile ? 4 : 8).map((blockchain) => (
+                    <Chip
                       key={blockchain.id}
                       label={`${blockchain.icon} ${blockchain.name}`}
                       size="small"
@@ -766,7 +791,8 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
                       sx={{
                         fontFamily: '"Orbitron", monospace',
                         fontWeight: 500,
-                        fontSize: '0.7rem',
+                        fontSize: { xs: '0.55rem', sm: '0.7rem' },
+                        height: { xs: 24, sm: 32 },
                         opacity: 0.7,
                       }}
                     />
@@ -861,6 +887,7 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
                   Please enter your bet amount below:
                   {!betAmount && (
                     <Box
+                      component="span"
                       sx={{
                         animation: 'blink 1.5s infinite',
                         '@keyframes blink': {
@@ -923,7 +950,7 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
                 />
                 
                 {/* Floating attention indicator */}
-                {!betAmount && isBettingEnabled && (
+                {!betAmount && isBettingEnabled && !isMobile && (
                   <Box
                     sx={{
                       position: 'absolute',
@@ -966,28 +993,30 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
         </Box>
       </DialogContent>
       
-      <DialogActions sx={{ p: 3 }}>
-        <Button 
+      <DialogActions sx={{ p: { xs: 2, sm: 3 } }}>
+        <Button
           onClick={onClose}
           sx={{
             fontFamily: '"Orbitron", monospace',
             fontWeight: 600,
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
             letterSpacing: '0.02em',
           }}
         >
           CANCEL
         </Button>
-        
+
         <Button
           onClick={handleStartGame}
           disabled={isStartGameDisabled()}
           variant="contained"
-          size="large"
+          size={isMobile ? 'medium' : 'large'}
           sx={{
-            px: 4,
-            py: 1.5,
+            px: { xs: 2, sm: 4 },
+            py: { xs: 1, sm: 1.5 },
             fontFamily: '"Orbitron", monospace',
             fontWeight: 700,
+            fontSize: { xs: '0.75rem', sm: '0.875rem' },
             letterSpacing: '0.02em',
             background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
             backgroundSize: '200% 200%',
@@ -1005,7 +1034,7 @@ const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
         >
           {isProcessing ? (
             <>
-              <CircularProgress size={24} sx={{ mr: 2, color: 'inherit' }} />
+              <CircularProgress size={20} sx={{ mr: 1, color: 'inherit' }} />
               STARTING...
             </>
           ) : (
