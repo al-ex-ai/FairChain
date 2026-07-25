@@ -39,9 +39,9 @@ Browser (React SPA)                    Backend (Express API)                Stel
 
 ## Tech Stack
 
-**Frontend:** React 18, TypeScript, Material-UI
-**Backend:** Express, TypeScript
-**Blockchain:** Stellar SDK (testnet)
+**Frontend:** React 19, TypeScript 5.9, MUI 7, Vite 8
+**Backend:** Express 5, TypeScript 5.9
+**Blockchain:** Stellar SDK 16 (testnet)
 
 ## How It Works
 
@@ -54,7 +54,7 @@ Browser (React SPA)                    Backend (Express API)                Stel
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22+
 
 ### Backend
 
@@ -71,29 +71,39 @@ The server starts on `http://localhost:3002`.
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
-The app opens at `http://localhost:3000`.
+The app opens at `http://127.0.0.1:15410`.
 
 ## Deployment
 
-### Frontend (Netlify)
+The live instance runs on a single Hetzner VPS behind Nginx, which terminates TLS,
+serves the static frontend build and reverse proxies `/api` to the backend.
 
-The frontend includes `netlify.toml` config. Connect your GitHub repo to Netlify and set:
-- **Build command:** `npm run build`
-- **Publish directory:** `build`
-- **Base directory:** `frontend`
-- **Environment variable:** `REACT_APP_API_URL` = your backend URL
+### Frontend
 
-### Backend (Render)
+```bash
+cd frontend
+npm ci
+npm run build     # outputs to frontend/build
+```
 
-A `render.yaml` blueprint is included. On [Render](https://render.com):
-1. New > Web Service > Connect your GitHub repo
-2. Set **Root Directory** to `backend`
-3. **Build Command:** `npm install && npm run build`
-4. **Start Command:** `npm start`
-5. Set **CORS_ORIGIN** env var to your frontend URL
+Point the Nginx `root` at `frontend/build` and add an SPA fallback
+(`try_files $uri $uri/ /index.html`). Set `VITE_API_URL` at build time if the API
+is not served from the same origin.
+
+### Backend
+
+```bash
+cd backend
+npm ci
+npm run build
+```
+
+Run `dist/index.js` under systemd. It binds to `127.0.0.1:3002` and is only
+reachable through the Nginx proxy, never directly. Set `CORS_ORIGIN` to the
+frontend origin.
 
 ## Project Structure
 
