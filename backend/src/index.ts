@@ -6,7 +6,9 @@ import gameRoutes from './routes/game.routes';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3002;
+// Number(), not `|| 3002` on the raw string: Express 5's listen overloads take a
+// number, and `process.env.PORT || 3002` widens to `string | 3002`.
+const port = Number(process.env.PORT) || 3002;
 
 // Middleware
 app.use(
@@ -24,6 +26,8 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', message: 'FairChain server is running' });
 });
 
-app.listen(port, () => {
-  console.log(`FairChain server running on port ${port}`);
+// Bind to loopback only. Nginx terminates TLS and proxies to 127.0.0.1:3002,
+// so the port must never be reachable on a public interface.
+app.listen(port, '127.0.0.1', () => {
+  console.log(`FairChain server running on 127.0.0.1:${port}`);
 });
