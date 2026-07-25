@@ -120,7 +120,6 @@ FairChain/
 │       ├── routes/        # API endpoints
 │       ├── controllers/   # Request handlers
 │       └── services/      # Stellar blockchain operations
-├── render.yaml        # Render deployment blueprint
 └── README.md
 ```
 
