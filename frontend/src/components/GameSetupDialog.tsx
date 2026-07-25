@@ -17,7 +17,7 @@ import {
   Alert,
   Typography,
   Paper,
-  Grid,
+  GridLegacy as Grid,
   ToggleButton,
   ToggleButtonGroup,
   useTheme,

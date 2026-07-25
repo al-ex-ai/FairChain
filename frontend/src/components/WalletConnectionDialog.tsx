@@ -15,7 +15,7 @@ import {
   useTheme,
   useMediaQuery,
   alpha,
-  Grid,
+  GridLegacy as Grid,
   Divider,
   Chip,
   IconButton,

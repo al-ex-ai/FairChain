@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Paper, Typography, Button, useTheme, alpha } from '@mui/material';
+import { Box, GridLegacy as Grid, Paper, Typography, Button, useTheme, alpha } from '@mui/material';
 import { SportsEsports, Refresh, EmojiEvents } from '@mui/icons-material';
 import { useGame } from '../contexts/GameContext';
 import GameSetupDialog from './GameSetupDialog';

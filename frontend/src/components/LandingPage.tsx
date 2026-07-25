@@ -3,7 +3,7 @@ import {
   Box,
   Typography,
   Container,
-  Grid,
+  GridLegacy as Grid,
   Card,
   CardContent,
   CardActionArea,

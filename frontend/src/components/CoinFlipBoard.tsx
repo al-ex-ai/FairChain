@@ -4,7 +4,7 @@ import {
   Typography,
   Button,
   Paper,
-  Grid,
+  GridLegacy as Grid,
   Alert,
   Chip,
   useTheme,
