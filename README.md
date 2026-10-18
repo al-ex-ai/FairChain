@@ -139,3 +139,11 @@ FairChain/
 ## Note
 
 This project runs on Stellar **testnet** only. No real cryptocurrency is used.
+
+## License
+
+Apache 2.0. See [LICENSE](LICENSE).
+
+## Author
+
+Alex Husniddinov
