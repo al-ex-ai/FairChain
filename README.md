@@ -3,7 +3,9 @@
 A blockchain-based gaming platform built on the Stellar testnet. Players can play games against AI opponents and place bets using XLM tokens with provably fair escrow-based transactions.
 
 **Live Demo:** [fairchain.al-ex.ai](https://fairchain.al-ex.ai/)
-*(Full-stack deployment — all games, wallet features, and blockchain betting are fully functional.)*
+*(Full-stack deployment: all games, wallet features, and blockchain betting are fully functional.)*
+
+![FairChain landing page](docs/screenshot.png)
 
 ## Games
 
@@ -33,8 +35,8 @@ Browser (React SPA)                    Backend (Express API)                Stel
 ```
 
 **Key design decisions:**
-- User private keys never leave the browser — transactions are signed client-side
-- Escrow private keys are managed server-side only — the backend signs payout transactions
+- User private keys never leave the browser; transactions are signed client-side
+- Escrow private keys are managed server-side only; the backend signs payout transactions
 - All transactions are on Stellar testnet with XLM tokens
 
 ## Tech Stack
